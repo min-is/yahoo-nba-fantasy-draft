@@ -1,0 +1,61 @@
+Eastern Conference,W,L,W/L%,GB,PS/G,PA/G,SRS,Conference,Western Conference,season_end_year,is_contender
+Boston Celtics*,64,18,0.78,—,120.6,109.2,10.75,East,,2024,True
+New York Knicks*,50,32,0.61,14.0,112.8,108.2,4.36,East,,2024,True
+Milwaukee Bucks*,49,33,0.598,15.0,119.0,116.4,2.44,East,,2024,True
+Cleveland Cavaliers*,48,34,0.585,16.0,112.6,110.2,1.98,East,,2024,True
+Orlando Magic*,47,35,0.573,17.0,110.5,108.4,1.48,East,,2024,True
+Indiana Pacers*,47,35,0.573,17.0,123.3,120.2,2.75,East,,2024,True
+Philadelphia 76ers*,47,35,0.573,17.0,114.6,111.5,2.51,East,,2024,False
+Miami Heat*,46,36,0.561,18.0,110.1,108.4,1.1,East,,2024,False
+Chicago Bulls,39,43,0.476,25.0,112.3,113.7,-1.77,East,,2024,False
+Atlanta Hawks,36,46,0.439,28.0,118.3,120.5,-2.38,East,,2024,False
+Brooklyn Nets,32,50,0.39,32.0,110.4,113.3,-3.02,East,,2024,False
+Toronto Raptors,25,57,0.305,39.0,112.4,118.8,-6.45,East,,2024,False
+Charlotte Hornets,21,61,0.256,43.0,106.6,116.8,-10.12,East,,2024,False
+Washington Wizards,15,67,0.183,49.0,113.7,123.0,-9.29,East,,2024,False
+Detroit Pistons,14,68,0.171,50.0,109.9,119.0,-9.06,East,,2024,False
+,57,25,0.695,—,120.1,112.7,7.36,West,Oklahoma City Thunder*,2024,True
+,57,25,0.695,—,114.9,109.6,5.23,West,Denver Nuggets*,2024,True
+,56,26,0.683,1.0,113.0,106.5,6.39,West,Minnesota Timberwolves*,2024,True
+,51,31,0.622,6.0,115.6,112.3,3.41,West,Los Angeles Clippers*,2024,True
+,50,32,0.61,7.0,117.9,115.6,2.3,West,Dallas Mavericks*,2024,True
+,49,33,0.598,8.0,116.2,113.2,3.08,West,Phoenix Suns*,2024,True
+,49,33,0.598,8.0,115.1,110.7,4.46,West,New Orleans Pelicans*,2024,False
+,47,35,0.573,10.0,118.0,117.4,1.07,West,Los Angeles Lakers*,2024,False
+,46,36,0.561,11.0,116.6,114.8,2.29,West,Sacramento Kings,2024,False
+,46,36,0.561,11.0,117.8,115.2,2.77,West,Golden State Warriors,2024,False
+,41,41,0.5,16.0,114.3,113.2,1.24,West,Houston Rockets,2024,False
+,31,51,0.378,26.0,115.7,120.5,-4.22,West,Utah Jazz,2024,False
+,27,55,0.329,30.0,105.8,112.8,-6.57,West,Memphis Grizzlies,2024,False
+,22,60,0.268,35.0,112.1,118.6,-5.8,West,San Antonio Spurs,2024,False
+,21,61,0.256,36.0,106.4,115.4,-8.29,West,Portland Trail Blazers,2024,False
+Cleveland Cavaliers*,64,18,0.78,—,121.9,112.4,8.81,East,,2025,True
+Boston Celtics*,61,21,0.744,3.0,116.3,107.2,8.28,East,,2025,True
+New York Knicks*,51,31,0.622,13.0,115.8,111.7,3.59,East,,2025,True
+Indiana Pacers*,50,32,0.61,14.0,117.4,115.1,1.68,East,,2025,True
+Milwaukee Bucks*,48,34,0.585,16.0,115.5,113.0,2.12,East,,2025,True
+Detroit Pistons*,44,38,0.537,20.0,115.5,113.6,1.73,East,,2025,True
+Orlando Magic*,41,41,0.5,23.0,105.4,105.5,-0.7,East,,2025,False
+Atlanta Hawks,40,42,0.488,24.0,118.2,119.3,-1.41,East,,2025,False
+Chicago Bulls,39,43,0.476,25.0,117.8,119.4,-1.83,East,,2025,False
+Miami Heat*,37,45,0.451,27.0,110.6,110.0,0.11,East,,2025,False
+Toronto Raptors,30,52,0.366,34.0,110.9,115.2,-4.4,East,,2025,False
+Brooklyn Nets,26,56,0.317,38.0,105.1,112.2,-6.95,East,,2025,False
+Philadelphia 76ers,24,58,0.293,40.0,109.6,115.8,-6.29,East,,2025,False
+Charlotte Hornets,19,63,0.232,45.0,105.1,114.2,-9.1,East,,2025,False
+Washington Wizards,18,64,0.22,46.0,108.0,120.4,-12.14,East,,2025,False
+,68,14,0.829,—,120.5,107.6,12.7,West,Oklahoma City Thunder*,2025,True
+,52,30,0.634,16.0,114.3,109.8,4.97,West,Houston Rockets*,2025,True
+,50,32,0.61,18.0,113.4,112.2,1.45,West,Los Angeles Lakers*,2025,True
+,50,32,0.61,18.0,120.8,116.9,3.97,West,Denver Nuggets*,2025,True
+,50,32,0.61,18.0,112.9,108.2,4.84,West,Los Angeles Clippers*,2025,True
+,49,33,0.598,19.0,114.3,109.3,5.15,West,Minnesota Timberwolves*,2025,True
+,48,34,0.585,20.0,113.8,110.5,3.56,West,Golden State Warriors*,2025,False
+,48,34,0.585,20.0,121.7,116.9,4.79,West,Memphis Grizzlies*,2025,False
+,40,42,0.488,28.0,115.7,115.3,0.58,West,Sacramento Kings,2025,False
+,39,43,0.476,29.0,114.2,115.4,-0.74,West,Dallas Mavericks,2025,False
+,36,46,0.439,32.0,113.6,116.6,-2.55,West,Phoenix Suns,2025,False
+,36,46,0.439,32.0,110.9,113.9,-2.67,West,Portland Trail Blazers,2025,False
+,34,48,0.415,34.0,113.9,116.7,-2.45,West,San Antonio Spurs,2025,False
+,21,61,0.256,47.0,109.8,119.3,-8.59,West,New Orleans Pelicans,2025,False
+,17,65,0.207,51.0,111.9,121.2,-8.51,West,Utah Jazz,2025,False

@@ -169,47 +169,141 @@ class FantasyFeatureEngineer:
         
         return min(100, risk_score)  # Cap at 100
     
-    def calculate_age_adjustment(self, age):
-        """
-        Calculate age-based performance multiplier
-        Peak years: 25-29 (multiplier = 1.0)
-        Younger: slight penalty for inexperience
-        Older: decline curve
-        """
-        if pd.isna(age):
-            return 1.0
+    # def calculate_age_adjustment(self, age):
+    #     """
+    #     Calculate age-based performance multiplier
+    #     Peak years: 25-29 (multiplier = 1.0)
+    #     Younger: slight penalty for inexperience
+    #     Older: decline curve
+    #     """
+    #     if pd.isna(age):
+    #         return 1.0
         
-        if age < 23:
-            # Young players - slight upside potential
-            return 0.95 + (age - 20) * 0.025
-        elif 23 <= age <= 29:
-            # Prime years
-            return 1.0
-        elif 30 <= age <= 33:
-            # Early decline
-            return 1.0 - (age - 29) * 0.03
-        else:
-            # Steeper decline after 33
-            return 0.88 - (age - 33) * 0.05
+    #     if age < 23:
+    #         # Young players - slight upside potential
+    #         return 0.95 + (age - 20) * 0.025
+    #     elif 23 <= age <= 29:
+    #         # Prime years
+    #         return 1.0
+    #     elif 30 <= age <= 33:
+    #         # Early decline
+    #         return 1.0 - (age - 29) * 0.03
+    #     else:
+    #         # Steeper decline after 33
+    #         return 0.88 - (age - 33) * 0.05
     
     def add_team_context(self):
-        """
-        Add team-level features:
-        - Contender vs tanking team
-        - Team pace/efficiency
-        - Playoff probability
-        """
-        if self.standings is None or self.standings.empty:
-            self.game_logs['is_contender'] = True  # Default assumption
-            return
-        
-        # Merge team standings info
-        team_mapping = self.standings.set_index(['Team', 'season_end_year'])['is_contender'].to_dict()
-        
-        self.game_logs['is_contender'] = self.game_logs.apply(
-            lambda row: team_mapping.get((row.get('team', ''), row.get('season_end_year', 2025)), True),
-            axis=1
-        )
+            """
+            Add team-level features:
+            - Contender vs tanking team
+            - Team pace/efficiency
+            - Playoff probability
+            """
+            if self.standings is None or self.standings.empty:
+                self.game_logs['is_contender'] = True  # Default assumption
+                return
+            
+            print(f"Processing standings data...")
+            
+            try:
+                # DO NOT SET ANY INDEX - Remove any line that does standings_copy.set_index(...)
+                
+                # Basketball-Reference has separate columns for each conference
+                # Combine 'Eastern Conference' and 'Western Conference' columns
+                team_mapping = {}
+                
+                for _, row in self.standings.iterrows():
+                    season = row.get('season_end_year', 2025)
+                    is_contender = row.get('is_contender', True)
+                    
+                    # Check both conference columns
+                    east_team = row.get('Eastern Conference')
+                    west_team = row.get('Western Conference')
+                    
+                    # Use whichever is not NaN
+                    if pd.notna(east_team):
+                        team_name = str(east_team).strip().rstrip('*')  # Remove asterisk from playoff teams
+                        team_mapping[(team_name, season)] = is_contender
+                    
+                    if pd.notna(west_team):
+                        team_name = str(west_team).strip().rstrip('*')
+                        team_mapping[(team_name, season)] = is_contender
+                
+                print(f"Found {len(team_mapping)} team-season combinations")
+                
+                # Apply to game logs - need to match Team enum objects with standings names
+                def match_team(game_team, season):
+                    # Convert to string if it's not already
+                    game_team_str = str(game_team)
+                    
+                    # Check if it's in the expected format "Team.TEAM_NAME"
+                    if 'Team.' in game_team_str:
+                        # Remove "Team." prefix and convert to title case
+                        clean_name = game_team_str.replace('Team.', '').replace('_', ' ').title()
+                        
+                        # Handle special cases for team names
+                        name_mappings = {
+                            'Dallas Mavericks': 'Dallas Mavericks',
+                            'San Antonio Spurs': 'San Antonio Spurs',
+                            'Memphis Grizzlies': 'Memphis Grizzlies',
+                            'Charlotte Hornets': 'Charlotte Hornets',
+                            'Los Angeles Lakers': 'Los Angeles Lakers',
+                            'New Orleans Pelicans': 'New Orleans Pelicans',
+                            'Milwaukee Bucks': 'Milwaukee Bucks',
+                            'Utah Jazz': 'Utah Jazz',
+                            'Minnesota Timberwolves': 'Minnesota Timberwolves',
+                            'Los Angeles Clippers': 'Los Angeles Clippers',
+                            'Phoenix Suns': 'Phoenix Suns',
+                            'Golden State Warriors': 'Golden State Warriors',
+                            'Atlanta Hawks': 'Atlanta Hawks',
+                            'Orlando Magic': 'Orlando Magic',
+                            'Brooklyn Nets': 'Brooklyn Nets',
+                            'Miami Heat': 'Miami Heat',
+                            'Philadelphia 76ers': 'Philadelphia 76ers',
+                            'Cleveland Cavaliers': 'Cleveland Cavaliers',
+                            'Houston Rockets': 'Houston Rockets',
+                            'Portland Trail Blazers': 'Portland Trail Blazers',
+                            'Oklahoma City Thunder': 'Oklahoma City Thunder',
+                            'Toronto Raptors': 'Toronto Raptors',
+                            'Chicago Bulls': 'Chicago Bulls',
+                            'Denver Nuggets': 'Denver Nuggets',
+                            'Boston Celtics': 'Boston Celtics',
+                            'Indiana Pacers': 'Indiana Pacers',
+                            'Washington Wizards': 'Washington Wizards',
+                            'Detroit Pistons': 'Detroit Pistons',
+                            'Sacramento Kings': 'Sacramento Kings',
+                            'New York Knicks': 'New York Knicks',
+                        }
+                        
+                        # Try exact match first
+                        if (clean_name, season) in team_mapping:
+                            return team_mapping[(clean_name, season)]
+                        
+                        # Try fuzzy match (for slight name differences)
+                        for (mapped_team, mapped_season), is_cont in team_mapping.items():
+                            if mapped_season == season:
+                                # Check if the clean name is contained in the mapped team name
+                                if clean_name.lower() in mapped_team.lower() or mapped_team.lower() in clean_name.lower():
+                                    return is_cont
+                    
+                    # Default to True (contender) if no match
+                    return True
+                
+                self.game_logs['is_contender'] = self.game_logs.apply(
+                    lambda row: match_team(row.get('team', ''), row.get('season_end_year', 2025)),
+                    axis=1
+                )
+                
+                # Show how many were matched
+                contenders = self.game_logs['is_contender'].sum()
+                print(f"✓ Marked {contenders}/{len(self.game_logs)} games as contender teams")
+                
+            except Exception as e:
+                print(f"⚠️  Could not add team context: {e}")
+                print(f"   Using default (all teams as contenders)")
+                import traceback
+                traceback.print_exc()
+                self.game_logs['is_contender'] = True
     
     def create_all_features(self):
         """
@@ -217,6 +311,12 @@ class FantasyFeatureEngineer:
         Returns enhanced DataFrame
         """
         print("\nCreating advanced features...")
+        
+        # Convert team columns to strings if they're enums
+        if 'team' in self.game_logs.columns:
+            self.game_logs['team'] = self.game_logs['team'].astype(str)
+        if 'opponent' in self.game_logs.columns:
+            self.game_logs['opponent'] = self.game_logs['opponent'].astype(str)
         
         # Ensure data is sorted
         self.game_logs = self.game_logs.sort_values(['player_name', 'date']).reset_index(drop=True)
@@ -226,11 +326,14 @@ class FantasyFeatureEngineer:
             'consistency_score', 'floor', 'ceiling', 'avg_fp', 'median_fp',
             'std_fp', 'coef_variation', 'iqr_ratio', 'optimized_ma_fp',
             'optimized_ma_points', 'optimized_ma_rebounds', 'optimized_ma_assists',
-            'injury_risk_score', 'age_adjustment', 'games_played_count'
+            'injury_risk_score', 'games_played_count'
         ]
         
         for col in feature_cols:
             self.game_logs[col] = 0.0
+        
+        # Add team context first
+        self.add_team_context()
         
         # Group by player and calculate features
         player_features = []
@@ -266,8 +369,8 @@ class FantasyFeatureEngineer:
             injury_risk = self.calculate_injury_risk_score(player_name, recent_season)
             
             # 4. Age adjustment
-            age = player_games['age'].iloc[-1] if 'age' in player_games.columns else 27
-            age_adj = self.calculate_age_adjustment(age)
+            # age = player_games['age'].iloc[-1] if 'age' in player_games.columns else 27
+            # age_adj = self.calculate_age_adjustment(age)
             
             # Create feature row for this player (using most recent values)
             player_feature = {
@@ -279,26 +382,17 @@ class FantasyFeatureEngineer:
                 'optimized_ma_rebounds': opt_ma_reb[-1] if len(opt_ma_reb) > 0 else 0,
                 'optimized_ma_assists': opt_ma_ast[-1] if len(opt_ma_ast) > 0 else 0,
                 'injury_risk_score': injury_risk,
-                'age_adjustment': age_adj,
-                'age': age
+                # 'age_adjustment': age_adj,
+                # 'age': age,
+                'games_played_count': len(recent_season),
+                'is_contender': player_games['is_contender'].iloc[-1] if 'is_contender' in player_games.columns else True,
+                'team': player_games['team'].iloc[-1] if 'team' in player_games.columns else ''
             }
             
             player_features.append(player_feature)
         
         # Combine into DataFrame
         features_df = pd.DataFrame(player_features)
-        
-        # Add team context
-        self.add_team_context()
-        
-        # Merge team info into features
-        team_info = self.game_logs.groupby('player_name').agg({
-            'is_contender': 'last',
-            'team': 'last',
-            'season_end_year': 'max'
-        }).reset_index()
-        
-        features_df = features_df.merge(team_info, on='player_name', how='left')
         
         print(f"Created features for {len(features_df)} players")
         
